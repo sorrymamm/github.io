@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>사회탐구 과목 조합 분석 설문</title>
+    <link rel="stylesheet" href="styles.css">
+    <script>
+        const dataStore = {};
+
+        function submitData() {
+            const subject1 = document.getElementById('subject1').value;
+            const subject2 = document.getElementById('subject2').value;
+            const socialScore = parseFloat(document.getElementById('social-score').value);
+            const scienceScore = parseFloat(document.getElementById('science-score').value);
+
+            if (!subject1 || !subject2 || isNaN(socialScore) || isNaN(scienceScore)) {
+                alert('모든 필드를 올바르게 입력해주세요.');
+                return;
+            }
+
+            const key = `${subject1} + ${subject2}`;
+            const difference = socialScore - scienceScore;
+
+            if (!dataStore[key]) {
+                dataStore[key] = [];
+            }
+            dataStore[key].push(difference);
+
+            updateResults();
+        }
+
+        function updateResults() {
+            const resultsDiv = document.getElementById('results');
+            resultsDiv.innerHTML = '';
+
+            for (const [key, differences] of Object.entries(dataStore)) {
+                const avgDifference = (
+                    differences.reduce((sum, value) => sum + value, 0) / differences.length
+                ).toFixed(2);
+
+                const resultElement = document.createElement('div');
+                resultElement.textContent = `${key}: 평균 A-B = ${avgDifference}`;
+                resultsDiv.appendChild(resultElement);
+            }
+        }
+    </script>
+</head>
+<body>
+    <h1>사회탐구 & 과학탐구 과목 조합 분석 설문</h1>
+    <form id="survey-form">
+        <label for="subject1">사회탐구 과목 1:</label>
+        <select id="subject1" required>
+            <option value="">--선택--</option>
+            <option value="생활과 윤리">생활과 윤리</option>
+            <option value="윤리와 사상">윤리와 사상</option>
+            <option value="한국 지리">한국 지리</option>
+            <option value="세계 지리">세계 지리</option>
+            <option value="동아시아사">동아시아사</option>
+            <option value="세계사">세계사</option>
+            <option value="법과 정치">법과 정치</option>
+            <option value="경제">경제</option>
+            <option value="사회·문화">사회·문화</option>
+        </select>
+
+        <label for="subject2">사회탐구 과목 2:</label>
+        <select id="subject2" required>
+            <option value="">--선택--</option>
+            <option value="생활과 윤리">생활과 윤리</option>
+            <option value="윤리와 사상">윤리와 사상</option>
+            <option value="한국 지리">한국 지리</option>
+            <option value="세계 지리">세계 지리</option>
+            <option value="동아시아사">동아시아사</option>
+            <option value="세계사">세계사</option>
+            <option value="법과 정치">법과 정치</option>
+            <option value="경제">경제</option>
+            <option value="사회·문화">사회·문화</option>
+        </select>
+
+        <label for="social-score">사회탐구 평균 백분위 (A):</label>
+        <input type="number" id="social-score" min="0" max="100" required>
+
+        <label for="science-score">과학탐구 평균 백분위 (B):</label>
+        <input type="number" id="science-score" min="0" max="100" required>
+
+        <button type="button" onclick="submitData()">제출</button>
+    </form>
+
+    <h2>과목별 분석 결과</h2>
+    <div id="results"></div>
+</body>
+</html>
